@@ -75,7 +75,7 @@ __PACKAGE__->mk_accessors(
 
 
 # Version of the module
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 =head2 new
@@ -234,6 +234,5 @@ Copyright (C) 2008 by Emmanuel Rodriguez
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.8 or,
 at your option, any later version of Perl 5 you may have available.
-
 
 =cut
