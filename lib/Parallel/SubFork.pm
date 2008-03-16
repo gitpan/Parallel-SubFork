@@ -25,10 +25,17 @@ Parallel::SubFork - Manage Perl functions in forked processes.
 		print "\n";
 	}
 
+or more easily:
+
+	use Parallel::SubFork qw(sub_fork);
+	
+	my $task = sub_fork(\&callback, @args);
+	$task->wait_for();
+
 =head1 DESCRIPTION
 
 This module provides a simple wrapper over the module L<Parallel::SubFork::Task>
-which in turns simplifies the usage of the system calls L<fork> and L<waitpid>.
+which in turns simplifies the usage of the system calls C<fork> and C<waitpid>.
 The idea is to isolate the tasks to be execute in functions or closures and to
 execute them in a separated process in order to take advantage of
 parallelization.
@@ -52,16 +59,17 @@ an exit code (C<0> for an execution without flaws and any other integer for
 reporting an error) and not a true value in the I<Perl> sense. The return value
 will be used as the exit code of the process that's running the task.
 
-=head1 METHODS
-
-The module defines the following methods:
-
 =cut
 
 use strict;
 use warnings;
 
 use Carp;
+
+use base 'Exporter';
+our @EXPORT_OK = qw(
+	sub_fork
+);
 
 use Parallel::SubFork::Task;
 
@@ -75,7 +83,48 @@ __PACKAGE__->mk_accessors(
 
 
 # Version of the module
-our $VERSION = '0.04';
+our $VERSION = '0.05';
+
+
+=head1 FUNCTIONS
+
+The module provides the following functions:
+
+=cut
+
+
+=head2 sub_fork
+
+This function provides a simple way for creating and launching tasks.
+
+Parameters:
+
+	$code: the code reference to execute in a different process.
+	@args: the arguments to pass to the code reference (optional).
+
+=cut
+
+sub sub_fork {
+
+	# Arguments
+	my ($code, @args) = @_;
+
+	my $task;
+	eval {
+		$task = Parallel::SubFork::Task->start($code, @args);
+	};
+	if (my $error = $@) {
+		croak $error;
+	}
+	return $task;
+}
+
+
+=head1 METHODS
+
+The module defines the following methods:
+
+=cut
 
 
 =head2 new
