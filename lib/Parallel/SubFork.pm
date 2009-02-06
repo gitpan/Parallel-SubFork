@@ -20,7 +20,7 @@ Parallel::SubFork - Manage Perl functions in forked processes.
 	foreach my $task ($manager->tasks) {
 		# Access any of the properties
 		printf "Task with PID %d resumed\n", $task->pid;
-		printf "Exist status: %d, exit code: %d\\n", $task->status, $task->exit_code;
+		printf "Exist status: %d, exit code: %d\n", $task->status, $task->exit_code;
 		printf "Args of task where: %s\n", join(', ', $task->args);
 		print "\n";
 	}
@@ -83,7 +83,7 @@ __PACKAGE__->mk_accessors(
 
 
 # Version of the module
-our $VERSION = '0.06_01';
+our $VERSION = '0.06_02';
 
 
 =head1 FUNCTIONS
@@ -99,8 +99,17 @@ This function provides a simple way for creating and launching tasks.
 
 Parameters:
 
-	$code: the code reference to execute in a different process.
-	@args: the arguments to pass to the code reference (optional).
+=over
+
+=item $code
+
+The code reference to execute.
+
+=item @args (optional)
+
+The arguments to pass to the code reference.
+
+=back
 
 =cut
 
@@ -172,8 +181,17 @@ one that created the instance object being called.
 
 Parameters:
 
-	$code: the code reference to execute in a different process.
-	@args: the arguments to pass to the code reference (optional).
+=over
+
+=item $code
+
+The code reference to execute.
+
+=item @args (optional)
+
+The arguments to pass to the code reference.
+
+=back
 
 =cut
 

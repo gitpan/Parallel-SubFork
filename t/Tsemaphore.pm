@@ -63,18 +63,29 @@ END {
 }
 
 #
-# Creates a new set of semaphores
+# Creates a new set of semaphores. If the semaphores can't be created it returns
+# false.
 #
 sub semaphore_init {
+	my ($skip_count) = @_;
+	die "Usage count" unless @_;
 	
 	# Remove the previous semaphore
 	$SEMAPHORE->remove if defined $SEMAPHORE;
 	
 	# Create a semaphore holding 2 values
 	$SEMAPHORE = IPC::Semaphore->new(IPC_PRIVATE, 2, S_IRWXU | IPC_CREAT);
+	if (! defined $SEMAPHORE) {
+		# Bad implementation of IPC::Semaphore
+		SKIP: {
+			skip "Can't create a semaphore", $skip_count;
+		}
+		return 0;
+	}
 	isa_ok($SEMAPHORE, 'IPC::Semaphore');
 	
 	semaphore_reset();
+	return 1;
 }
 
 
@@ -138,10 +149,11 @@ sub semaphore_task {
 
 
 #
-# Execute a task and test that it's running properly
+# Execute a task and test that it's running properly. If a callback is passed
+# then it will be invoked while the task is running.
 #
 sub test_semaphore_task_run {
-	my ($task) = @_;
+	my ($task, $callback) = @_;
 
 	# Make sure that there's no hanging, it's better to fail the test due to a
 	# timeout than to leave the test haging there forever.
@@ -160,6 +172,13 @@ sub test_semaphore_task_run {
 		my $kid = waitpid($task->pid, WNOHANG);
 		is($kid, 0, "Child process still running");
 	}
+	
+	
+	# If the user provided a callback invoke it.
+	if (ref $callback eq 'CODE') {
+		$callback->($task);
+	}
+	
 
 	# Tell the kid that we finish checking it, it can now resume
 	$return = semaphore_let_go($SEMAPHORE_POINT_B);
