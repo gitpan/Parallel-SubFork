@@ -86,11 +86,13 @@ C<exit> then consider instead using C<_exit> as defined in the module L<POSIX>.
 This is because C<exit> not only terminates the current process but it performs
 some cleanup such as calling the functions registered with C<atexit> and flush
 all stdio streams before finishing the process. Normally, only the main process
-should call C<exit>, in the case of a fork the children should finish their execution through C<POSIX::_exit>.
+should call C<exit>, in the case of a fork the children should finish their
+execution through C<POSIX::_exit>.
 
 =head1 PROCESS WAIT
 
-Waiting for process to finish can be problematic as there are multiple ways for waiting for processes to resume each having it's advantages and disadvantages.
+Waiting for process to finish can be problematic as there are multiple ways for
+waiting for processes to resume each having it's advantages and disadvantages.
 
 The easiest way is to register a signal handler for C<CHLD> signal. This has the
 advantage of receiving the child notifications as they happen, the disadvantage
@@ -139,7 +141,7 @@ __PACKAGE__->mk_accessors(
 
 
 # Version of the module
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 
 # Check if it's possible to use a high precision alarm
@@ -343,7 +345,8 @@ If the module L<Time::HiRes> is available then timeout can be in fractions (ex:
 will round the results during the conversion to int.
 
 The timeout is implemented through the C<alarm> system call which means that if
-a previous alarm was set it will be reset. Furthermore, if a timeout between 0 and 1 second is provided as a fraction and that C<Time::Hires> is not available
+a previous alarm was set it will be reset. Furthermore, if a timeout between 0
+and 1 second is provided as a fraction and that C<Time::Hires> is not available
 Perl will round the value to 0 which will imply that C<alarm(0)> will be called.
 This will have for effect to reset the previous alarm and to wait until the task
 resumes without a timeout.
