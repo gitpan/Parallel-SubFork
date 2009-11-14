@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Parallel-SubFork
-version:             0.07
+version:             0.08
 abstract:            Manage Perl functions in forked processes. 
 license:             ~
 author:              
