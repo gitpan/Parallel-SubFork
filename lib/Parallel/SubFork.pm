@@ -83,7 +83,7 @@ __PACKAGE__->mk_accessors(
 
 
 # Version of the module
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 
 =head1 FUNCTIONS
@@ -300,7 +300,7 @@ Emmanuel Rodriguez, E<lt>emmanuel.rodriguez@gmail.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008 by Emmanuel Rodriguez
+Copyright (C) 2008-2010 by Emmanuel Rodriguez
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.8 or,
