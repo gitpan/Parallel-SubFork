@@ -316,10 +316,11 @@ sub execute {
 		my $return = 1;
 		eval {
 			$return = $code->($self->args);
-		};
-		if (my $error = $@) {
+			1;
+		} or do {
+			my $error = $@;
 			carp "Child executed with errors: ", $error;
-		}
+		};
 		
 		# This is as far as the kid gets if the callback hasn't called exit we do it
 		_exit($return);
@@ -382,9 +383,8 @@ sub wait_for {
 	my ($timeout) = @_;
 
 	my $pid = $self->pid;
-	return unless defined $pid and $pid > 0;
 	if (! (defined $pid and $pid > 0) ) {
-		croak "Task isn't started";
+		croak "Task isn't started yet";
 	}
 	
 	# Only the real parent can wait for the child
@@ -417,7 +417,7 @@ sub wait_for {
 			if (defined $timeout) {
 
 				# In the case of a timeout we invoke this code once
-				$timemout_done++ or return 1;
+				return 1 if $timemout_done++;
 
 				# NOTE: The timeout is implemented with a sleep instead of an alarm
 				#       because some versions/combinations of perl and Time::HiRes cause
